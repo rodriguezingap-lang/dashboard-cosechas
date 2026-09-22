@@ -12,30 +12,44 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# --- ESTILOS CSS ELEGANTES ---
+# --- ESTILOS CSS PROFESIONALES Y ADAPTATIVOS ---
 st.markdown("""
     <style>
-        .main { background-color: #0e1117; }
-        .stMetric { background-color: #1f2937; padding: 15px; border-radius: 10px; border: 1px solid #374151; }
-        h1, h2, h3 { color: #f3f4f6; }
+        /* Las tarjetas de métricas ahora se adaptan automáticamente al modo Light y Dark */
+        .stMetric {
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(128, 128, 128, 0.2);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        /* Hacer que los títulos principales (h1) se queden estáticos al hacer scroll */
+        h1 {
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            background-color: var(--background-color);
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
         .explanation-box {
-            background-color: #1f2937;
             padding: 15px;
             border-left: 5px solid #10b981;
             border-radius: 5px;
             margin-bottom: 20px;
-            color: #d1d5db;
         }
+        
         .alert-box {
-            background-color: #2d1f1f;
             padding: 15px;
             border-left: 5px solid #ef4444;
             border-radius: 5px;
             margin-bottom: 20px;
-            color: #d1d5db;
         }
     </style>
 """, unsafe_allow_html=True)
+
+
 
 # --- CARGA DE DATOS AUTOMÁTICA DESDE GOOGLE DRIVE ---
 @st.cache_data(ttl=300)
