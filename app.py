@@ -15,7 +15,7 @@ st.set_page_config(
 # --- ESTILOS CSS PROFESIONALES Y ADAPTATIVOS ---
 st.markdown("""
     <style>
-        /* Las tarjetas de métricas ahora se adaptan automáticamente al modo Light y Dark */
+        /* Las tarjetas de métricas se adaptan automáticamente al modo Light y Dark */
         .stMetric {
             padding: 15px;
             border-radius: 10px;
@@ -23,14 +23,16 @@ st.markdown("""
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
         
-        /* Hacer que los títulos principales (h1) se queden estáticos al hacer scroll */
+        /* Contenedor fijo superior para los títulos principales (h1) */
         h1 {
-            position: sticky;
-            top: 0;
-            z-index: 999;
-            background-color: var(--background-color);
-            padding-top: 10px;
-            padding-bottom: 10px;
+            position: sticky !important;
+            top: 0px !important;
+            z-index: 99999 !important;
+            background-color: var(--background-color) !important;
+            padding-top: 15px !important;
+            padding-bottom: 10px !important;
+            margin-top: -10px !important;
+            border-bottom: 1px solid rgba(128, 128, 128, 0.1);
         }
 
         .explanation-box {
