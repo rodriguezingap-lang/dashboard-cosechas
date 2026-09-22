@@ -221,6 +221,8 @@ elif pagina == "🟨 3. Productividad":
     else:
         st.warning("No hay datos disponibles para los filtros seleccionados.")
 
+
+
 # ==========================================
 # PÁGINA 4 — CALIDAD DE DATOS
 # ==========================================
@@ -231,9 +233,9 @@ elif pagina == "🟥 4. Calidad de Datos":
 
     total_reg = len(df_filtrado)
     if total_reg > 0:
-        nulos_has = (df_filtrado['Hectareas'] == 0).sum()
-        ceros_kilos = (df_filtrado['Kilos_Recolectados'] == 0).sum()
-        completitud = ((total_reg - nulos_has) / total_reg * 100)
+        nulos_has = (df_filtrado['Hectareas'] == 0).sum() if 'Hectareas' in df_filtrado.columns else 0
+        ceros_kilos = (df_filtrado['Kilos_Recolectados'] == 0).sum() if 'Kilos_Recolectados' in df_filtrado.columns else 0
+        completitud = ((total_reg - nulos_has) / total_reg * 100) if total_reg > 0 else 0
 
         qc1, qc2, qc3, qc4 = st.columns(4)
         with qc1: st.metric("✅ Completitud de Datos", f"{completitud:.2f}%")
@@ -244,15 +246,25 @@ elif pagina == "🟥 4. Calidad de Datos":
         st.markdown("---")
         st.subheader("🚨 Tabla de Auditoría: Registros con Anomalías Detectadas")
         
-        df_anomalias = df_filtrado[(df_filtrado['Kilos_Recolectados'] == 0) | (df_filtrado['Hectareas'] == 0)].copy()
-        if not df_anomalias.empty:
-            df_anomalias['Tipo_Anomalia'] = np.where(df_anomalias['Kilos_Recolectados'] == 0, 'Producción Cero (0 kg)', 'Hectáreas en Cero')
-            st.dataframe(df_anomalias[['ID_Lote', 'Fecha', 'Nombre_Completo', 'Cultivo', 'Tipo_Anomalia']].head(50), use_container_width=True)
+        # Filtrar anomalías de forma segura
+        cols_requeridas = ['Kilos_Recolectados', 'Hectareas']
+        if all(c in df_filtrado.columns for c in cols_requeridas):
+            df_anomalias = df_filtrado[(df_filtrado['Kilos_Recolectados'] == 0) | (df_filtrado['Hectareas'] == 0)].copy()
+            if not df_anomalias.empty:
+                df_anomalias['Tipo_Anomalia'] = np.where(df_anomalias['Kilos_Recolectados'] == 0, 'Producción Cero (0 kg)', 'Hectáreas en Cero')
+                
+                # Seleccionar solo las columnas que SÍ existan en el DataFrame para evitar errores
+                columnas_disponibles = [col for col in ['ID_Lote', 'Fecha', 'Nombre_Completo', 'Cultivo', 'Tipo_Anomalia'] if col in df_anomalias.columns]
+                
+                st.dataframe(df_anomalias[columnas_disponibles].head(50), use_container_width=True)
+            else:
+                st.success("¡Excelente! No se encontraron anomalías críticas con los filtros actuales.")
         else:
-            st.success("¡Excelente! No se encontraron anomalías críticas con los filtros actuales.")
+            st.warning("Faltan columnas numéricas clave en la base de datos para realizar la auditoría.")
     else:
         st.warning("No hay registros disponibles para los filtros seleccionados.")
 
+        
 # ==========================================
 # PÁGINA 5 — ESTADÍSTICA AVANZADA
 # ==========================================
